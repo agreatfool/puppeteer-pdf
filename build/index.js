@@ -17,7 +17,7 @@ const LibFs = require("mz/fs");
 const pkg = require('../package.json');
 const BASE_NAME = 'output.pdf';
 program.version(pkg.version)
-    .description('puppeteer-pdf: convert html url to pdf')
+    .description('agreatfool-pdf: convert html url to pdf')
     .option('-u, --url <string>', 'source url')
     .option('-o, --output_dir <dir>', 'output directory')
     .option('-N, --output_name <string>', `output basename, optional, default is ${BASE_NAME}`)
@@ -30,14 +30,14 @@ const ARGS_PROXY_URL = program.proxy === undefined ? undefined : program.proxy;
 class PuppeteerPdf {
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('puppeteer-pdf starting ...');
+            console.log('agreatfool-pdf starting ...');
             yield this._validate();
             yield this._process();
         });
     }
     _validate() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('puppeteer-pdf validating ...');
+            console.log('agreatfool-pdf validating ...');
             if (ARGS_SOURCE_URL === undefined) {
                 console.log('Source url required, please provide -u option');
                 process.exit(1);
@@ -59,7 +59,7 @@ class PuppeteerPdf {
     }
     _process() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(`puppeteer-pdf processing url: ${ARGS_SOURCE_URL} ...`);
+            console.log(`agreatfool-pdf processing url: ${ARGS_SOURCE_URL} ...`);
             const options = ARGS_PROXY_URL === undefined ? {} : {
                 ignoreHTTPSErrors: true,
                 args: [

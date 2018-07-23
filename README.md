@@ -1,18 +1,18 @@
-puppeteer-pdf
-=============
+agreatfool-pdf
+==============
 
 ## Install
 ```
-npm install puppeteer-pdf -g
+npm install agreatfool-pdf -g
 ```
 
 ## Usage
 ```
-$ puppeteer-pdf -h
+$ agreatfool-pdf -h
 
   Usage: index [options]
 
-  puppeteer-pdf: convert html url to pdf
+  agreatfool-pdf: convert html url to pdf
 
   Options:
 
