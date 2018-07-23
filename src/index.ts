@@ -10,7 +10,8 @@ import {Stats} from "fs";
 
 const pkg = require('../package.json');
 
-const BASE_NAME = 'output.pdf';
+const TYPES = ['PDF', 'PNG'];
+const BASE_NAME = 'output';
 
 program.version(pkg.version)
     .description('agreatfool-pdf: convert html url to pdf')
@@ -18,12 +19,14 @@ program.version(pkg.version)
     .option('-o, --output_dir <dir>', 'output directory')
     .option('-N, --output_name <string>', `output basename, optional, default is ${BASE_NAME}`)
     .option('-p, --proxy <string>', `proxy url, example: proxy.example.com:8010`)
+    .option(`-t, --type <${TYPES.join('|')}>, default is ${TYPES[0]}`)
     .parse(process.argv);
 
 const ARGS_SOURCE_URL = (program as any).url === undefined ? undefined : (program as any).url;
 const ARGS_OUTPUT_DIR = (program as any).output_dir === undefined ? undefined : (program as any).output_dir;
 const ARGS_OUTPUT_NAME = !(program as any).output_name ? BASE_NAME : (program as any).output_name;
 const ARGS_PROXY_URL = (program as any).proxy === undefined ? undefined : (program as any).proxy;
+const ARGS_TYPE = !(program as any).type === undefined ? TYPES[0] : (program as any).type;
 
 class PuppeteerPdf {
 
@@ -37,6 +40,7 @@ class PuppeteerPdf {
     private async _validate() {
         console.log('agreatfool-pdf validating ...');
 
+        // -u url
         if (ARGS_SOURCE_URL === undefined) {
             console.log('Source url required, please provide -u option');
             process.exit(1);
@@ -46,6 +50,7 @@ class PuppeteerPdf {
             process.exit(1);
         }
 
+        // -o output_dir
         if (ARGS_OUTPUT_DIR === undefined) {
             console.log('Output directory required, please provide -o option');
             process.exit(1);
@@ -53,6 +58,12 @@ class PuppeteerPdf {
         let destStat: Stats = LibFs.statSync(ARGS_OUTPUT_DIR);
         if (!destStat.isDirectory()) {
             console.log('Valid output directory required, please check -o option');
+            process.exit(1);
+        }
+
+        // -t type
+        if (TYPES.indexOf(ARGS_TYPE) === -1) {
+            console.log('Valid type required, please check -t option');
             process.exit(1);
         }
     }
@@ -73,7 +84,12 @@ class PuppeteerPdf {
         const page = await browser.newPage();
         await page.goto(ARGS_SOURCE_URL);
         await page.emulateMedia('screen');
-        await page.pdf({path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME)});
+
+        if (ARGS_TYPE === TYPES[0]) {
+            await page.pdf({path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME) + '.pdf'});
+        } else {
+            await page.screenshot({path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME) + '.png'});
+        }
 
         await browser.close();
     }

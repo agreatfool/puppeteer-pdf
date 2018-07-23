@@ -15,18 +15,21 @@ const validator = require("validator");
 const LibPath = require("path");
 const LibFs = require("mz/fs");
 const pkg = require('../package.json');
-const BASE_NAME = 'output.pdf';
+const TYPES = ['PDF', 'PNG'];
+const BASE_NAME = 'output';
 program.version(pkg.version)
     .description('agreatfool-pdf: convert html url to pdf')
     .option('-u, --url <string>', 'source url')
     .option('-o, --output_dir <dir>', 'output directory')
     .option('-N, --output_name <string>', `output basename, optional, default is ${BASE_NAME}`)
     .option('-p, --proxy <string>', `proxy url, example: proxy.example.com:8010`)
+    .option(`-t, --type <${TYPES.join('|')}>, default is ${TYPES[0]}`)
     .parse(process.argv);
 const ARGS_SOURCE_URL = program.url === undefined ? undefined : program.url;
 const ARGS_OUTPUT_DIR = program.output_dir === undefined ? undefined : program.output_dir;
 const ARGS_OUTPUT_NAME = !program.output_name ? BASE_NAME : program.output_name;
 const ARGS_PROXY_URL = program.proxy === undefined ? undefined : program.proxy;
+const ARGS_TYPE = !program.type === undefined ? TYPES[0] : program.type;
 class PuppeteerPdf {
     run() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -38,6 +41,7 @@ class PuppeteerPdf {
     _validate() {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('agreatfool-pdf validating ...');
+            // -u url
             if (ARGS_SOURCE_URL === undefined) {
                 console.log('Source url required, please provide -u option');
                 process.exit(1);
@@ -46,6 +50,7 @@ class PuppeteerPdf {
                 console.log('Valid url required, please check -u option');
                 process.exit(1);
             }
+            // -o output_dir
             if (ARGS_OUTPUT_DIR === undefined) {
                 console.log('Output directory required, please provide -o option');
                 process.exit(1);
@@ -53,6 +58,11 @@ class PuppeteerPdf {
             let destStat = LibFs.statSync(ARGS_OUTPUT_DIR);
             if (!destStat.isDirectory()) {
                 console.log('Valid output directory required, please check -o option');
+                process.exit(1);
+            }
+            // -t type
+            if (TYPES.indexOf(ARGS_TYPE) === -1) {
+                console.log('Valid type required, please check -t option');
                 process.exit(1);
             }
         });
@@ -72,7 +82,12 @@ class PuppeteerPdf {
             const page = yield browser.newPage();
             yield page.goto(ARGS_SOURCE_URL);
             yield page.emulateMedia('screen');
-            yield page.pdf({ path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME) });
+            if (ARGS_TYPE === TYPES[0]) {
+                yield page.pdf({ path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME) + '.pdf' });
+            }
+            else {
+                yield page.screenshot({ path: LibPath.join(ARGS_OUTPUT_DIR, ARGS_OUTPUT_NAME) + '.png' });
+            }
             yield browser.close();
         });
     }

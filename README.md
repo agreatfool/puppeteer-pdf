@@ -21,5 +21,6 @@ $ agreatfool-pdf -h
     -o, --output_dir <dir>      output directory
     -N, --output_name <string>  output basename, optional, default is output.pdf
     -p, --proxy <string>        proxy url, example: proxy.example.com:8010
+    -t, --type <PDF|PNG>, default is PDF  
     -h, --help                  output usage information
 ```
