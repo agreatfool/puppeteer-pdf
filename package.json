@@ -1,0 +1,32 @@
+{
+  "name": "puppeteer-pdf",
+  "version": "0.0.1",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "puppeteer-pdf": "./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agreatfool/puppeteer-pdf.git"
+  },
+  "author": "Jonathan Dai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agreatfool/puppeteer-pdf/issues"
+  },
+  "homepage": "https://github.com/agreatfool/puppeteer-pdf#readme",
+  "dependencies": {
+    "commander": "2.16.0",
+    "mz": "2.7.0",
+    "puppeteer": "1.6.0",
+    "validator": "10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "10.5.2",
+    "@types/validator": "9.4.1"
+  }
+}
